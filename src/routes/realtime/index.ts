@@ -1,4 +1,5 @@
 import { FastifyPluginAsync } from "fastify";
+import { watchFile } from "fs";
 import db from "../../db/db";
 
 const websocketRoute: FastifyPluginAsync = async (
@@ -23,14 +24,14 @@ const websocketRoute: FastifyPluginAsync = async (
           client.send(JSON.stringify({ data }));
       });
 
-    setInterval(() => {
+    watchFile("../../db/data.json", () => {
       const queue = db.chain.get("notifications").value();
       queue.forEach(async (item) => {
         await broadcast({ source: "db", payload: queue[0] });
         await db.chain.get("notifications").remove(queue[0]).value();
         await db.save();
       });
-    }, 30000);
+    });
 
     wss.on("message", (m: string) => {
       const dataString = m.toString();
