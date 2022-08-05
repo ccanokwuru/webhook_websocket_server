@@ -18,6 +18,7 @@ const app: FastifyPluginAsync<AppOptions> = async (
   // Place here your custom code!
   fastify.register(fastifyCors, {
     origin: "*",
+    methods: ["post", "get"],
   });
 
   // @ts-ignore

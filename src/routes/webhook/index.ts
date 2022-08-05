@@ -15,16 +15,23 @@ const webhookRoute: FastifyPluginAsync = async (
         throw new Error("message and destination needed is required");
       } else reply.code(201);
 
-      // @ts-ignore
+      const id = generateId();
       const createdAt = new Date();
-      const data = { createdAt, to, message };
+      const data = { id, createdAt, to, message };
 
       // @ts-ignore
       db.chain.get("email_queue").push(data).value();
 
       db.save();
-      // @ts-ignore
-      // return db.chain.get(this.table).find({ id: data.id }).value();
+
+      const msg = db.chain.get("email_queue").find({ id }).value();
+      const payload = {
+        meta: "notify",
+        message: msg,
+      };
+
+      this.server.emit("broadcast", payload);
+
       return;
     }
   );
@@ -47,11 +54,13 @@ const webhookRoute: FastifyPluginAsync = async (
     await db.save();
 
     const msg = db.chain.get("notifications").find({ id }).value();
-
-    this.server.emit("broadcast", {
+    const payload = {
       meta: "notify",
       message: msg,
-    });
+    };
+
+    this.server.emit("broadcast", payload);
+
     return;
   });
 
