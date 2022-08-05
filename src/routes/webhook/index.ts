@@ -55,31 +55,31 @@ const webhookRoute: FastifyPluginAsync = async (
     return;
   });
 
-  fastify.get<{
-    Querystring: { destination?: string; message: string };
-  }>("/notify", async function (request, reply) {
-    const { destination, message } = request.query;
-    if (!message) {
-      reply.code(411);
-      throw new Error("message and destination needed is required");
-    } else reply.code(201);
-    const id = generateId();
-    const createdAt = new Date();
-    const data = { destination, message, id, createdAt };
+  // fastify.get<{
+  //   Querystring: { destination?: string; message: string };
+  // }>("/notify", async function (request, reply) {
+  //   const { destination, message } = request.query;
+  //   if (!message) {
+  //     reply.code(411);
+  //     throw new Error("message and destination needed is required");
+  //   } else reply.code(201);
+  //   const id = generateId();
+  //   const createdAt = new Date();
+  //   const data = { destination, message, id, createdAt };
 
-    // @ts-ignore
-    db.chain.get("notifications").push(data).value();
+  //   // @ts-ignore
+  //   db.chain.get("notifications").push(data).value();
 
-    await db.save();
+  //   await db.save();
 
-    const msg = db.chain.get("notifications").find({ id });
+  //   const msg = db.chain.get("notifications").find({ id });
 
-    this.server.emit("broadcast", {
-      meta: "notify",
-      message: msg,
-    });
-    return;
-  });
+  //   this.server.emit("broadcast", {
+  //     meta: "notify",
+  //     message: msg,
+  //   });
+  //   return;
+  // });
 };
 
 export default webhookRoute;

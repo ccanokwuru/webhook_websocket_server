@@ -34,11 +34,6 @@ const websocketRoute: FastifyPluginAsync = async (
       const dataString = m.toString();
       const { meta, payload } = JSON.parse(dataString);
 
-      // server.emit("save_notify", {
-      //   message: JSON.stringify(payload),
-      //   destination: "all",
-      // });
-
       if (meta === "join") sendToAll(payload);
       else if (meta === "broadcast") broadcast(payload);
     });
