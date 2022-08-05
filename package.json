@@ -27,9 +27,11 @@
     "fastify-mailer": "^2.3.1",
     "fastify-plugin": "^3.0.0",
     "lodash": "^4.17.21",
+    "mqemitter": "^5.0.0",
     "nodemailer": "^6.7.7"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.182",
     "@types/node": "^18.0.0",
     "@types/tap": "^15.0.5",
     "concurrently": "^7.0.0",
